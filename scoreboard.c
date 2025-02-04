@@ -8,7 +8,7 @@
 void scoreboard(){
     //initscr();
     refresh();
-    WINDOW*win=newwin(17,60,10,40);
+    WINDOW*win=newwin(17,60,10,50);
     box(win,0,0);
     FILE*file=fopen("gold.txt","r");
     int rotbe=1;
@@ -26,6 +26,7 @@ void scoreboard(){
         line[strcspn(line,"\n")]='\0';
         char *word=strtok(line,":");
         char *g=strtok(NULL,":");
+        char*Nh=strtok(NULL,":");
 
         if(rotbe<11){
             if(rotbe==1){
@@ -37,13 +38,13 @@ void scoreboard(){
             else if(rotbe==3){
                 wattron(win,COLOR_PAIR(3));
             }
-        if(rotbe<4){mvwprintw(win,rotbe,3,"%d- Name: %s  Gold:%s \U0001F3C5",rotbe,word,g);wrefresh(win);}
-        else{mvwprintw(win,rotbe,3,"%d- Name: %s  Gold:%s",rotbe,word,g);wrefresh(win);}
+        if(rotbe<4){mvwprintw(win,rotbe,3,"%d- Name: %s  Gold:%s  Games:%s \U0001F3C5",rotbe,word,g,Nh);wrefresh(win);}
+        else{mvwprintw(win,rotbe,3,"%d- Name: %s  Gold:%s Games:%s",rotbe,word,g,Nh);wrefresh(win);}
         wattroff(win,COLOR_PAIR(rotbe));
         }
         if(!strcmp(hero.name,word)){
-         if(rotbe<11){mvwprintw(win,rotbe,3,"%d- Name: %s  Gold:%s ",rotbe,word,g);wrefresh(win);}
-         mvwprintw(win,12,3,"%d- Name: %s  Gold:%s %c",rotbe,word,g,'&');wrefresh(win);
+         if(rotbe<11){mvwprintw(win,rotbe,3,"%d- Name: %s  Gold:%s Games:%s ",rotbe,word,g,Nh);wrefresh(win);}
+         mvwprintw(win,12,3,"%d- Name: %s  Gold:%s  Games:%s  %c",rotbe,word,g,Nh,'&');wrefresh(win);
         }
         rotbe++;
 

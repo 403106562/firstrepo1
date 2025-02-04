@@ -406,7 +406,7 @@ void Giantposition(int l, char c[300][300],ROOM*room, char backup[300][300]){
      srandom(time(NULL));
 
     while(1){
-        int position_d=0;//random()%(l-1)+1;
+        int position_d=random()%(l-1)+1;
         int x=rand()%(room[position_d].width-1) + room[position_d].x;
         int y=rand()%(room[position_d].hight-1) + room[position_d].y;
         if(c[x][y]=='.'){

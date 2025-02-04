@@ -170,6 +170,8 @@ void main(){
                 mvprintw(14,60,"User or Pass is not correct. 1-random password  2-back");
                 fclose(file);
                 char a=getch();
+                while(1){
+                    echo();
                 if(a==50){
                 clear(); refresh();
                 continue;}
@@ -215,10 +217,17 @@ void main(){
                     }
                 }
             }
+            if(a!=49 && a!=50){
+                noecho();
+                a=getch();
+                continue;
+            }
+            
     
         } 
         strcpy(hero.name,User);
         break;  }
+        }
     }
     else if(c==50){
         clear();
@@ -269,7 +278,7 @@ void main(){
             }
         }
         FILE*Gold=fopen("gold.txt","a");
-        fprintf(Gold,"%s:%d\n",User,0);
+        fprintf(Gold,"%s:%d:%d\n",User,0,0);
         fclose(Gold);
 
         FILE*file=fopen("data.txt","a");

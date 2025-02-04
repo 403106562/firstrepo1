@@ -876,44 +876,54 @@ void sortplayers(FILE*file){
 
     char*C=(char*)malloc(10*sizeof(char));
     char*id=(char*)malloc(50*sizeof(char));
+    char*n=(char*)malloc(10*sizeof(char));
 
     for(int i=0;i<2000;i++){
         User[i]=(char*)malloc(50*sizeof(char));
         //GOLD[i]=(char*)malloc(50*sizeof(char));
     }
     int *G=(int *)malloc(2000*sizeof(int));
+    int *N=(int*)malloc(2000*sizeof(int));
     int line_cursor=0;
     while(fgets(l,sizeof(l),file)!=NULL){
         l[strcspn(l,"\n")]='\0';
         id=strtok(l,":\n");
         strcpy(User[line_cursor],id);
         C=strtok(NULL,":\n");
+        n=strtok(NULL,":\n");
         //printf("%s %s\n",User[line_cursor], GOLD[line_cursor]);
         sscanf(C,"%d",G+line_cursor);
+        sscanf(n,"%d",N+line_cursor);
     
         line_cursor++;
     }
     
     fclose(file);
      file=fopen("gold.txt","w");
-     int competition;
+     int competition1;
+     int competition2;
      char sharp[1][50];
 
       for(int i=0;i<line_cursor;i++){
           for(int j=i+1;j<line_cursor;j++){
               if(G[i]>G[j]){
-                  competition=G[i];
+                  competition1=G[i];
                   G[i]=G[j];
-                  G[j]=competition;
+                  G[j]=competition1;
                   strcpy(sharp[0],User[i]);
                   strcpy(User[i],User[j]);
                   strcpy(User[j],sharp[0]);
+                  competition2=N[i];
+                  N[i]=N[j];
+                  N[j]=competition2;
+
+
               }
 
           }
       }
        for(int i=line_cursor-1;i>=0;i--){
-           fprintf(file,"%s:%d\n",User[i],G[i]);
+           fprintf(file,"%s:%d:%d\n",User[i],G[i],N[i]);
        }
        fclose(file);
       //for(int i=0;i<2000;i++){
@@ -1246,9 +1256,12 @@ void moveplayer(int x, int y, char c[300][300]){
     
     int r,s; getmaxyx(stdscr,s,r);
 
-     WINDOW*message=newwin(3,50,s-4,7);
+     WINDOW*message=newwin(4,50,s-5,7);
      box(message,0,0);
-     mvwprintw(message,1,1, "Health: %d Time remaining: %ld", health.health,TIME-current_time+game.startgame);
+     mvwprintw(message,1,1, "Health: %d Time remaining: %ld ", health.health,TIME-current_time+game.startgame);
+     for(int i=1;i<health.health/4 +1;i++){
+        mvwprintw(message,2,i,"#");wrefresh(message);
+     }
      wrefresh(message);
 
     time(&current_time);
@@ -1276,25 +1289,29 @@ void moveplayer(int x, int y, char c[300][300]){
          char line[100];
          char*C=(char*)malloc(10*sizeof(char));
          char*id=(char*)malloc(50*sizeof(char));
+         char*numgame=(char*)malloc(10*sizeof(char));
           while(fgets(line,sizeof(line),file) !=NULL){
             line[strcspn(line,"\r\n")]='\0';
              id=strtok(line,":");
              C=strtok(NULL,":");
+             numgame=strtok(NULL,":");
              if(id==NULL){exit(0);}
             int *g=(int*)malloc(sizeof(int));
+            int *a=(int*)malloc(sizeof(int));
              //if(C==NULL || id==NULL || g==NULL){menu();}
         //     mvprintw(0,0,"%s",id);
                sscanf(C,"%d",g);
+               sscanf(numgame,"%d",a);
                     if(strcmp(id,hero.name)==0){
                         if(flor.floor==4 && findenemy(c)==0){
-                            fprintf(temp,"%s:%d\n",id,*g+Gold);}
+                            fprintf(temp,"%s:%d:%d\n",id,*g+Gold,*a+1);}
                         if(current_time-game.startgame>TIME || health.health<=0){
-                            fprintf(temp,"%s:%d\n",id,*g+Gold/2);
+                            fprintf(temp,"%s:%d:%d\n",id,*g+Gold/2,*a+1);
                         }
 
                   continue;
                     }
-                   fprintf(temp,"%s:%d\n",id,*g);
+                   fprintf(temp,"%s:%d:%d\n",id,*g,*a+1);
           }
           
            fclose(file); fclose(temp);           
@@ -2288,7 +2305,7 @@ void start(){
     if(c[X][Y]=='.'){
         time(&game.startgame);
         flor.floor=1;
-        health.health=250;
+        health.health=150;
         //getch();
         //clear(); refresh();
         //getch();
